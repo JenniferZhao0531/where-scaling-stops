@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Not All Error Yields to Scale | Vision-Language Inference</title>
+  <meta name="description" content="A separable inference scaling law for vision-language models: cognitive ceilings, architectural divergence, and compute-optimal allocation.">
+  <meta name="theme-color" content="#2563eb">
+  <meta property="og:title" content="Not All Error Yields to Scale">
+  <meta property="og:description" content="Where Scaling Stops in Vision-Language Inference. A research project from Nanjing University.">
+  <meta property="og:type" content="website">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232563eb'/%3E%3Cpath d='M7 24V8M7 24h19M11 20l5-7 5-3h5' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/source-serif-4-latin.woff2" as="font" type="font/woff2" crossorigin>
+</head>
+<body>
+<a class="skip-link" href="#abstract">Skip to content</a>
+<header class="hero" id="top">
+  <div class="container hero-inner">
+    <h1>Not All Error Yields to Scale:<span class="title-subtitle">Where Scaling Stops in Vision-Language Inference</span></h1>
+    <p class="authors"><span>Xinye Zhao</span><span>Yunkai Dang</span><span>Yunchen Wu</span><span>Wenbin Li<sup>†</sup></span></p>
+    <p class="affiliation">School of Intelligence Science and Technology<br><strong>Nanjing University</strong></p>
+    <p class="correspondence"><sup>†</sup> Corresponding author</p>
+    <nav class="resources" aria-label="Paper resources">
+      <a id="paper-link" href="https://arxiv.org/pdf/2610.01640" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5M8 12h8M8 16h6"/></svg><span>Paper</span></a>
+      <a href="#bibtex"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7h5v6H6v4H3v-5c0-3 1-5 2-5zM16 7h5v6h-4v4h-3v-5c0-3 1-5 2-5z"/></svg><span>BibTeX</span></a>
+    </nav>
+  </div>
+</header>
+<main>
+<section class="section section-wash" id="abstract" aria-labelledby="abstract-title">
+<div class="container narrow">
+<h2 id="abstract-title">Abstract</h2>
+      <p>Vision-language models (VLMs) face a fixed-budget trade-off between processing more visual information for fine-grained perception and using a larger language backbone for complex reasoning. Existing studies do not tell us which combination of backbone size and input resolution to deploy, especially in high-resolution deployments. To address this gap, we propose the Separable Law that describes how VLM performance changes with language backbone size and visual token count. We fit the law to measurements from 26 InternVL and QwenVL models, with language backbone sizes from 1B to 72B, on four high-resolution benchmarks with image sizes from 224 pixels to 8K. We find that the questions responding to scaling can be predicted from the skill they require, while a substantial fraction never responds at all. We also find that the two model families gain similarly from a larger backbone, while their gains from more visual tokens differ sharply. Combined with a cost law, the Separable Law gives a closed-form rule for allocating compute between backbone size and visual tokens. When deployment is limited to available configurations, the law identifies model and image sizes that perform close to the best feasible choice under the same budget. We hope our work offers a principled way to decide how much a model should be allowed to see at high resolution, given what it must reason about.</p>
+</div>
+</section>
+
+<section class="section" id="overview" aria-labelledby="overview-title">
+<div class="container">
+<h2 id="overview-title">Overview</h2>
+      <figure id="overview-figure">
+        <button class="figure-zoom" type="button" data-title="Overview: From the Separable Law to the Findings" data-pdf="assets/overview.pdf" aria-label="Enlarge the overview figure">
+          <img src="assets/overview.webp" width="3456" height="792" loading="lazy" alt="Overview of the study: a fixed-budget trade-off between visual tokens and language backbone size leads to the Separable Law, question-level scaling ceilings, architecture-dependent scaling behavior, and compute allocation for deployment.">
+        </button>
+      </figure>
+</div>
+</section>
+
+<section class="section " id="motivation" aria-labelledby="motivation-title">
+<div class="container">
+<h2 id="motivation-title">Motivation</h2>
+      <p>High-resolution visual questions can require both small details and complex reasoning. Processing <strong class="key-emphasis visual">more visual tokens</strong> preserves evidence but consumes compute; a <strong class="key-emphasis capacity">larger language backbone</strong> adds capacity but leaves less budget for the image. This raises an important question, illustrated in <a href="#motivation-figure">Figure 1</a>: <strong class="text-highlight">Given a fixed inference budget, how should compute be allocated between the language backbone and the visual tokens?</strong></p>
+      <figure class="teaser" id="motivation-figure">
+        <button class="figure-zoom" type="button" data-title="Fixed-budget vision-language inference" data-pdf="assets/motivation.pdf" aria-label="Enlarge the research overview figure">
+          <img src="assets/motivation.webp" width="2800" height="841" loading="lazy" alt="Two ways to spend the same inference budget: more visual tokens with a smaller backbone, or fewer tokens with a larger backbone. Some questions benefit from scaling while others remain largely incorrect over the tested range.">
+        </button>
+      </figure>
+      <p>We evaluate InternVL and QwenVL on HR-Bench, MME-RealWorld, TreeBench, and V* Bench while varying input resolution and measuring the visual tokens entering each backbone.</p>
+</div>
+</section>
+
+<section class="section section-wash" id="method" aria-labelledby="method-title">
+<div class="container">
+<h2 id="method-title">The Separable Law</h2>
+      <p>We model downstream error as <strong class="key-emphasis">three additive components</strong>: a fitted error floor, a term that falls with <strong class="key-emphasis capacity">language backbone size</strong>, and a term that falls with <strong class="key-emphasis visual">visual token count</strong>.</p>
+      <div class="equation equation-stacked" role="math" aria-label="L of N, R equals e infinity plus A divided by N to the alpha plus B divided by R to the beta">
+        <span><i>L</i>(<i>N</i>, <i>R</i>) =</span>
+        <span class="floor"><i>e</i><sub>∞</sub></span><span>+</span>
+        <span class="fraction capacity"><span class="numerator"><i>A</i></span><span class="denominator"><i>N</i><sup>α</sup></span></span>
+        <span>+</span>
+        <span class="fraction visual"><span class="numerator"><i>B</i></span><span class="denominator"><i>R</i><sup>β</sup></span></span>
+      </div>
+      <div class="equation-key"><span><b class="floor">e<sub>∞</sub></b> Fitted error floor</span><span><b class="capacity">N</b> Language backbone parameters</span><span><b class="visual">R</b> Visual tokens entering the backbone</span></div>
+      <p>The law captures the observed error surface and offers the <strong class="key-emphasis">best fit–complexity trade-off</strong> among the tested candidate forms.</p>
+      <figure>
+        <button class="figure-zoom" type="button" data-title="Validating the Separable Law" data-pdf="assets/fit-quality.pdf" aria-label="Enlarge the scaling-law validation figure">
+          <img src="assets/fit-quality.webp" width="2800" height="783" loading="lazy" alt="Predicted versus observed error, residual diagnostics, and comparison of separable, multiplicative, coupled, CES, and p-norm candidate scaling laws.">
+        </button>
+        <figcaption>Fit quality and candidate-law comparisons support the separable formulation.</figcaption>
+      </figure>
+</div>
+</section>
+
+<section class="section " id="findings" aria-labelledby="findings-title">
+<div class="container">
+<h2 id="findings-title">Key Findings</h2>
+<article class="finding" id="cognitive-ceiling" aria-labelledby="cognitive-ceiling-title">
+<p class="finding-label">Finding 1</p>
+<h3 id="cognitive-ceiling-title">Scaling Leaves Persistent Errors</h3>
+      <p class="finding-summary"><strong class="text-highlight">Scaling helps most questions but not all.</strong> About a third of them stay wrong at every model size and visual-token count we evaluate, and scaling shifts them in both directions without settling them. Which questions these are depends mainly on the visual skill a question demands, with the worst cases confined to particular pairings of skill and scene.</p>
+      <figure>
+        <button class="figure-zoom" type="button" data-title="Cognitive ceilings and question-level scaling response" data-pdf="assets/cognitive-ceilings.pdf" aria-label="Enlarge the cognitive ceilings figure">
+          <img src="assets/cognitive-ceilings.webp" width="2800" height="917" loading="lazy" alt="Question-level scaling regimes, gains in correct-answer probability across compute quartiles, and observed accuracy by required skill across compute quartiles.">
+        </button>
+        <figcaption>Question-level scaling responses vary across visual domains and required skills.</figcaption>
+      </figure>
+      <p class="finding-detail">Task averages can hide persistent errors on individual questions. <strong class="key-emphasis">Required skill explains more variation</strong> in the fitted floor than visual domain. Text reading and object identification show low fitted floors across most supported domains. The strongest ceiling occurs for <em>Aerial/Satellite × Scene Reasoning</em>.</p>
+</article>
+<article class="finding" id="architecture" aria-labelledby="architecture-title">
+<p class="finding-label">Finding 2</p>
+<h3 id="architecture-title">Visual-Token Scaling Depends on Architecture</h3>
+      <p class="finding-summary">The gains from a larger language backbone and from more visual tokens depend on the architecture. The two families <strong class="text-highlight capacity">agree on capacity</strong> but differ by more than an order of magnitude on visual tokens, because their frontends turn the same pixel budget into <strong class="text-highlight visual">very different token counts</strong>. Which of the two axes pays off faster reverses between them, so an allocation tuned on one architecture need not carry over to another.</p>
+      <figure>
+        <button class="figure-zoom" type="button" data-title="Architecture-dependent visual-token scaling" data-pdf="assets/architecture-divergence.pdf" aria-label="Enlarge the architectural divergence figure">
+          <img src="assets/architecture-divergence.webp" width="2800" height="748" loading="lazy" alt="Discrete tiling versus continuous resizing, contrasting fitted scaling exponents, and task-level capacity and visual-token exponents for InternVL and QwenVL.">
+        </button>
+        <figcaption>Discrete tiling and continuous resizing expose different token ranges and fitted scaling exponents.</figcaption>
+      </figure>
+<div class="pipeline-demo" id="pipeline-demo">
+  <div class="pipeline-shell">
+    <iframe id="pipeline-animation" src="assets/vlm-pipeline.html" title="Interactive comparison of InternVL and QwenVL visual-token pipelines" loading="lazy" sandbox="allow-scripts" referrerpolicy="no-referrer"></iframe>
+  </div>
+</div>
+      <p class="finding-detail">InternVL selects its tile grid mainly by image aspect ratio, so a larger input can leave the tile count unchanged. QwenVL resizes the whole image, exposing a much broader token range. Token count alone can miss changes in <strong class="key-emphasis">preserved image detail</strong>. For InternVL, <em>effective pixels</em> measure the image area retained by the frontend and explain variation that token count misses.</p>
+</article>
+<article class="finding" id="allocation" aria-labelledby="allocation-title">
+<p class="finding-label">Finding 3</p>
+<h3 id="allocation-title">The Law Guides Compute Allocation</h3>
+      <p class="finding-summary">The best way to spend a fixed budget depends on how much error each axis removes per unit of compute. Combined with a cost law, our law directs extra compute toward <strong class="text-highlight capacity">a larger backbone for InternVL</strong> and toward <strong class="text-highlight visual">more visual tokens for QwenVL</strong>. The option our law ranks first performs nearly as well as the best available option, even when it was held out from the fit.</p>
+      <figure>
+        <button class="figure-zoom" type="button" data-title="Compute allocation and held-out deployment decisions" data-pdf="assets/compute-allocation.pdf" aria-label="Enlarge the compute allocation figure">
+          <img src="assets/compute-allocation.webp" width="2800" height="620" loading="lazy" alt="Continuous VPE allocation trajectories, mean and 90th-percentile regret under joint holdout, regret distributions, and benchmark scaling-response diagnostics.">
+        </button>
+        <figcaption>VPE allocation and held-out configuration selection connect the scaling law to deployment decisions.</figcaption>
+      </figure>
+      <p class="finding-detail">The continuous solution describes how backbone size and visual tokens should grow with the language-side compute budget. For a fixed catalogue, <strong class="key-emphasis">direct selection</strong> predicts error for every configuration within budget and chooses the lowest. We test this rule with one backbone size and one input size <strong class="key-emphasis">held out from fitting</strong>. The selected configurations remain close to the best feasible choices.</p>
+</article>
+</div>
+</section>
+
+<section class="section section-wash" id="cases" aria-labelledby="cases-title">
+<div class="container">
+<h2 id="cases-title">Qualitative Examples</h2>
+<p class="section-intro">Selected Qwen3-VL examples show how answers change with visual input size and language backbone capacity.</p>
+<div class="case-tabs" id="case-tabs" role="tablist" aria-label="Question-level scaling examples">
+<button class="case-tab" id="case-tab-1" type="button" role="tab" aria-controls="case-panel-1" aria-selected="true" tabindex="0">More visual detail</button>
+<button class="case-tab" id="case-tab-2" type="button" role="tab" aria-controls="case-panel-2" aria-selected="false" tabindex="-1">Non-monotonic resolution</button>
+<button class="case-tab" id="case-tab-3" type="button" role="tab" aria-controls="case-panel-3" aria-selected="false" tabindex="-1">Larger backbone</button>
+</div>
+<div class="case-panels">
+<div class="case-panel" id="case-panel-1" role="tabpanel" aria-labelledby="case-tab-1" tabindex="0">
+<h3>More visual detail can help</h3>
+<figure>
+        <button class="figure-zoom" type="button" data-title="A remote-sensing question across input sizes" data-pdf="assets/case-resolution-remote-sensing.pdf" aria-label="Enlarge the remote-sensing case study">
+          <img src="assets/case-resolution-remote-sensing.webp" width="2640" height="1000" loading="lazy" alt="A remote-sensing question evaluated with Qwen3-VL 4B at input sizes from 224 to 2048 pixels, becoming correct at 768 pixels and remaining correct at larger inputs.">
+        </button>
+        <figcaption>With the model fixed, more visual detail resolves this remote-sensing question.</figcaption>
+      </figure>
+</div>
+<div class="case-panel" id="case-panel-2" role="tabpanel" aria-labelledby="case-tab-2" tabindex="0">
+<h3>Higher resolution is not always better</h3>
+<figure>
+        <button class="figure-zoom" type="button" data-title="A non-monotonic response to input resolution" data-pdf="assets/case-resolution-nonmonotonic.pdf" aria-label="Enlarge the non-monotonic resolution case study">
+          <img src="assets/case-resolution-nonmonotonic.webp" width="2628" height="1019" loading="lazy" alt="A Qwen3-VL 2B question is correct at 224 and 336 pixels, incorrect from 512 to 1024 pixels, and correct again at 2048 pixels.">
+        </button>
+        <figcaption>Increasing input resolution changes this answer in both directions.</figcaption>
+      </figure>
+</div>
+<div class="case-panel" id="case-panel-3" role="tabpanel" aria-labelledby="case-tab-3" tabindex="0">
+<h3>A larger backbone can make the difference</h3>
+<figure>
+        <button class="figure-zoom" type="button" data-title="Document reading at a fixed input size" data-pdf="assets/case-model-size-document.pdf" aria-label="Enlarge the model-size document case study">
+          <img src="assets/case-model-size-document.webp" width="2407" height="912" loading="lazy" alt="A fax-number question at a fixed input size of 1024 pixels, answered correctly by Qwen3-VL 8B and 32B but incorrectly by 2B and 4B.">
+        </button>
+        <figcaption>At a fixed input size, larger backbones recover the correct answer to this document-reading question.</figcaption>
+      </figure>
+</div>
+</div>
+</div>
+</section>
+
+<section class="section section-wash" id="bibtex" aria-labelledby="bibtex-title">
+<div class="container narrow">
+<h2 id="bibtex-title">BibTeX Citation</h2>
+      <p>If you find this work helpful, please cite:</p>
+      <div class="citation-top"><span>Citation</span><button class="copy-button" id="copy-citation" type="button">Copy BibTeX</button></div>
+      <pre><code id="citation">@misc{zhao2026erroryieldsscalescaling,
+      title={Not All Error Yields to Scale: Where Scaling Stops in Vision-Language Inference},
+      author={Xinye Zhao and Yunkai Dang and Yunchen Wu and Wenbin Li},
+      year={2026},
+      eprint={2610.01640},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2610.01640},
+}</code></pre>
+      <p id="copy-status" role="status" aria-live="polite"></p>
+</div>
+</section>
+</main>
+<dialog id="figure-dialog" aria-labelledby="dialog-title">
+    <div class="dialog-top"><h2 id="dialog-title">Research figure</h2><button id="close-figure" class="close-button" type="button" aria-label="Close enlarged figure">Close</button></div>
+    <div class="dialog-image-wrap"><img id="dialog-image" alt=""></div>
+    <p class="dialog-bottom"><a id="dialog-pdf" href="assets/motivation.pdf" target="_blank" rel="noopener noreferrer">Open original vector PDF</a><span>Press Esc to close</span></p>
+  </dialog>
+<script src="script.js" defer></script>
+</body>
+</html>
