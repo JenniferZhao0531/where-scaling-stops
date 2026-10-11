@@ -23,14 +23,11 @@ Vision-language models (VLMs) face a fixed-budget trade-off between processing m
 ## Citation
 
 ```bibtex
-@misc{zhao2026erroryieldsscalescaling,
-      title={Not All Error Yields to Scale: Where Scaling Stops in Vision-Language Inference},
-      author={Xinye Zhao and Yunkai Dang and Yunchen Wu and Wenbin Li},
-      year={2026},
-      eprint={2610.01640},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV},
-      url={https://arxiv.org/abs/2610.01640},
+@article{zhao2026not,
+  title={Not All Error Yields to Scale: Where Scaling Stops in Vision-Language Inference},
+  author={Zhao, Xinye and Dang, Yunkai and Wu, Yunchen and Li, Wenbin},
+  journal={arXiv preprint arXiv:2610.01640},
+  year={2026}
 }
 ```
 
