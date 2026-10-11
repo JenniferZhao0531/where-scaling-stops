@@ -3,193 +3,353 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Not All Error Yields to Scale | Vision-Language Inference</title>
-  <meta name="description" content="A separable inference scaling law for vision-language models: cognitive ceilings, architectural divergence, and compute-optimal allocation.">
-  <meta name="theme-color" content="#2563eb">
-  <meta property="og:title" content="Not All Error Yields to Scale">
-  <meta property="og:description" content="Where Scaling Stops in Vision-Language Inference. A research project from Nanjing University.">
-  <meta property="og:type" content="website">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232563eb'/%3E%3Cpath d='M7 24V8M7 24h19M11 20l5-7 5-3h5' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="style.css">
-  <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="assets/fonts/source-serif-4-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <title>Xinye Zhao (赵歆烨) at Nanjing University</title>
+  <meta name="description" content="Xinye Zhao is a fourth-year undergraduate at Nanjing University interested in large language models, vision-language models, and AI agents.">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23294f85'/%3E%3Cpath d='M8 8h7c2 0 3 1 3 2 0-1 1-2 3-2h3v16h-3c-2 0-3 1-3 2-1-1-2-2-4-2H8z' fill='white'/%3E%3Cpath d='M18 10v13' stroke='%23294f85' stroke-width='1.5'/%3E%3C/svg%3E">
+  <style>
+    /* 1. 全局：用少量颜色和固定阅读宽度建立秩序。 */
+    :root {
+      --ink: #242b36;
+      --muted: #667080;
+      --blue: #294f85;
+      --line: #e1e5eb;
+      --soft: #f5f7fa;
+      --body: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+      --heading: Georgia, "Times New Roman", "Noto Serif SC", serif;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 2rem; }
+    body { margin: 0; color: var(--ink); background: #fff; font-family: var(--body); font-size: 1rem; line-height: 1.75; }
+    a { color: var(--blue); text-decoration-thickness: 1px; text-underline-offset: .2em; }
+    a:hover { text-decoration: underline; }
+    a:focus-visible { outline: 2px solid var(--blue); outline-offset: 5px; border-radius: 2px; }
+    p { margin: 0 0 1rem; }
+    h1, h2, h3 { line-height: 1.3; }
+    h1, h2 { font-family: var(--heading); }
+    h1 { margin: 0 0 .65rem; font-size: clamp(2rem, 4vw, 2.75rem); font-weight: 500; letter-spacing: -.04em; }
+    h2 { margin: 0 0 1.35rem; font-size: 1.65rem; font-weight: 500; letter-spacing: -.025em; }
+    h3 { margin: 0 0 .4rem; font-size: 1.03rem; font-weight: 650; }
+    ::selection { color: #183254; background: #dce8f7; }
+    .skip-link { position: absolute; top: -5rem; left: 1rem; padding: .5rem 1rem; background: white; z-index: 10; }
+    .skip-link:focus { top: 1rem; }
+    .page { width: min(1080px, calc(100% - 80px)); margin: 0 auto; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; gap: 2rem; padding: 1.4rem 0; border-bottom: 1px solid var(--line); }
+    .site-label { color: var(--muted); font-size: .875rem; letter-spacing: .04em; }
+    .nav { display: flex; flex-wrap: wrap; gap: 1.4rem; font-size: .875rem; }
+    .nav a { text-decoration: none; }
+    .nav a:hover { text-decoration: underline; }
+    /* 2. 个人信息与简介：宽屏两列，窄屏自然叠放。 */
+    .layout { display: grid; grid-template-columns: 225px minmax(0, 1fr); gap: 4.5rem; padding-top: 3.2rem; }
+    .profile { align-self: start; position: sticky; top: 2rem; }
+    .portrait { width: 100%; aspect-ratio: 1 / 1.15; display: block; overflow: hidden; border: 1px solid var(--line); background: var(--soft); margin-bottom: 1.6rem; }
+    .portrait-label { font-family: var(--heading); font-size: 1.4rem; color: var(--muted); }
+    .portrait-caption { font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; }
+    .portrait img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 100%; transform: scale(1.3); transform-origin: 67% 70%; }
+    .profile-name { margin-bottom: .3rem; font-size: 1.18rem; font-weight: 650; }
+    .profile-native { margin-bottom: .65rem; color: var(--muted); font-size: .94rem; }
+    .profile-contact { margin-top: 1.1rem; padding-top: 1.1rem; border-top: 1px solid var(--line); overflow-wrap: anywhere; }
+    .contact-link { display: inline-flex; align-items: center; gap: .65rem; color: var(--muted); font-weight: 500; text-decoration: none; }
+    .contact-link:hover, .contact-link:focus-visible { color: var(--blue); text-decoration: underline; }
+    .contact-icon { width: 20px; height: 20px; flex: none; }
+    .profile-links { display: flex; flex-direction: column; align-items: flex-start; gap: .7rem; font-size: 1rem; }
+    .unset-link { color: var(--muted); }
+    .profile-info { min-width: 0; overflow-wrap: anywhere; }
+    .content { min-width: 0; overflow-wrap: anywhere; }
+    .intro { margin-bottom: 2.6rem; }
+    .chinese-name { display: inline-block; font-family: var(--body); font-size: .5em; font-weight: 400; letter-spacing: 0; color: var(--muted); }
+    /* 3. 内容区：标题、细线、留白，而不是卡片堆叠。 */
+    .section { border-top: 1px solid var(--line); padding-top: 1.75rem; margin-bottom: 2.65rem; scroll-margin-top: 2rem; }
+    .news-list { display: grid; gap: .7rem; }
+    .news-item { display: grid; grid-template-columns: 5rem minmax(0, 1fr); gap: 1rem; }
+    .date { color: var(--muted); font-size: .875rem; font-variant-numeric: tabular-nums; }
+    .news-item p { margin: 0; }
+    .publication { display: grid; grid-template-columns: minmax(180px, 31%) minmax(0, 1fr); gap: .85rem 1.4rem; align-items: start; }
+    .publication + .publication { margin-top: 1.75rem; }
+    .pub-figure { display: block; width: 100%; padding: 0; margin-top: .2rem; overflow: hidden; border: 1px solid var(--line); border-radius: 4px; background: #fff; appearance: none; cursor: zoom-in; }
+    .pub-figure:hover { border-color: var(--blue); }
+    .pub-figure:focus-visible { outline: 2px solid var(--blue); outline-offset: 5px; }
+    .pub-figure img { display: block; width: 100%; height: auto; }
+    body.figure-open { overflow: hidden; }
+    .figure-viewer { width: min(1320px, calc(100vw - 2rem)); max-width: none; max-height: calc(100vh - 2rem); max-height: calc(100dvh - 2rem); padding: 1rem; border: 0; border-radius: 6px; color: var(--ink); background: #fff; overflow: auto; }
+    .figure-viewer[open] { display: grid; gap: 1rem; }
+    .figure-viewer::backdrop { background: rgba(20, 25, 32, .85); }
+    .figure-viewer-header { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 1rem; }
+    .figure-viewer-title { margin: 0; font-family: var(--body); font-size: 1rem; line-height: 1.5; font-weight: 500; letter-spacing: 0; overflow-wrap: anywhere; }
+    .figure-viewer-close { min-width: 44px; min-height: 44px; padding: .5rem .75rem; border: 1px solid var(--line); border-radius: 4px; color: var(--ink); background: #fff; font: inherit; font-size: .875rem; cursor: pointer; }
+    .figure-viewer-close:hover { background: var(--soft); }
+    .figure-viewer-close:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
+    .figure-viewer-close span { margin-left: .4rem; font-size: 1.2rem; }
+    .figure-viewer-image { display: block; width: auto; height: auto; max-width: 100%; max-height: calc(100vh - 9rem); max-height: calc(100dvh - 9rem); margin: 0 auto; object-fit: contain; cursor: zoom-out; }
+    .pub-copy { min-width: 0; }
+    .pub-title { font-size: 1.04rem; line-height: 1.5; margin-bottom: .35rem; font-weight: 650; }
+    .authors { margin-bottom: .25rem; font-size: .94rem; }
+    .authors strong { font-weight: 700; }
+    .venue { color: var(--muted); font-size: .9rem; margin-bottom: .35rem; }
+    .pub-links { display: flex; flex-wrap: wrap; gap: .6rem; font-size: .875rem; }
+    .pub-links a { display: inline-flex; align-items: center; justify-content: center; min-height: 36px; padding: .35rem .85rem; border: 1px solid var(--blue); border-radius: 4px; background: #fff; font-weight: 500; line-height: 1.3; text-decoration: none; }
+    .pub-links a:hover { background: #eef3f9; text-decoration: none; }
+    .pub-links a:active { background: #e1eaf6; }
+    .pub-summary { grid-column: 1 / -1; margin: 0; font-size: .94rem; }
+    .pub-abstract { grid-column: 1 / -1; margin-top: 0; font-size: .94rem; }
+    .pub-abstract summary { width: fit-content; color: var(--blue); font-size: .875rem; cursor: pointer; }
+    .pub-abstract summary:hover { text-decoration: underline; text-underline-offset: .2em; }
+    .pub-abstract summary:focus-visible { outline: 2px solid var(--blue); outline-offset: 5px; border-radius: 2px; }
+    .pub-abstract p { margin: .6rem 0 0; }
+    .publication + .publication { padding-top: 1.6rem; border-top: 1px solid var(--line); }
+    .internship-role { color: #000; font-size: .94rem; }
+    .company-heading { display: flex; align-items: center; gap: .8rem; min-width: 0; }
+    .company-title { display: flex; flex-wrap: wrap; align-items: baseline; gap: .2rem 1rem; min-width: 0; }
+    .company-heading h3 { margin: 0; min-width: 0; }
+    .company-logo { display: block; width: 40px; height: auto; flex: none; }
+    .internship-entry { align-items: center; margin-bottom: .9rem; }
+    .internship-entry .date { padding-top: 0; }
+    .experience-points { margin: 0; padding-left: 1.25rem; }
+    .experience-points li + li { margin-top: .6rem; }
+    .entry { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1.25rem; }
+    .entry + .entry { margin-top: 1.5rem; }
+    .entry p { margin: 0; font-size: .94rem; color: var(--muted); }
+    .entry .date { text-align: right; padding-top: .08rem; }
+    .honors-list { display: grid; gap: .85rem; margin: 0; padding: 0; list-style: none; }
+    .honor { display: grid; grid-template-columns: 3rem minmax(0, 1fr); gap: 1rem; }
+    .service-list { margin: 0; padding-left: 1.25rem; }
+    .service-list li + li { margin-top: .45rem; }
+    .footer { display: flex; justify-content: space-between; gap: 1.5rem; border-top: 1px solid var(--line); padding: 1.4rem 0 2rem; margin-top: .5rem; color: var(--muted); font-size: .8rem; }
+    .footer a { color: var(--muted); }
+    /* 4. 响应式：手机保留全部内容，缩小边距、取消吸顶。 */
+    @media (max-width: 850px) {
+      .page { width: calc(100% - 48px); }
+      .layout { grid-template-columns: 185px minmax(0, 1fr); gap: 2.5rem; }
+    }
+    @media (max-width: 760px) {
+      .publication { grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+      .pub-figure { margin-top: 0; }
+    }
+    @media (max-width: 640px) {
+      .page { width: calc(100% - 40px); }
+      .topbar { align-items: flex-start; flex-direction: column; gap: .6rem; padding: 1.2rem 0; }
+      .nav { gap: .5rem 1.25rem; }
+      .layout { display: block; padding-top: 2rem; }
+      .profile { position: static; display: grid; grid-template-columns: 108px minmax(0, 1fr); gap: 1.25rem; margin-bottom: 2rem; }
+      .portrait { margin: 0; }
+      .portrait-label { font-size: 1rem; }
+      .portrait-caption { font-size: .75rem; letter-spacing: .03em; }
+      .profile-name { font-size: 1rem; }
+      .profile-contact { grid-column: 1 / -1; margin-top: 0; padding-top: .9rem; }
+      h1 { font-size: 2.3rem; }
+      h2 { font-size: 1.5rem; }
+      .intro { margin-bottom: 2rem; }
+      .news-item { grid-template-columns: 4rem minmax(0, 1fr); gap: .75rem; }
+      .entry { grid-template-columns: 1fr; gap: .2rem; }
+      .entry .date { text-align: left; }
+      .section { margin-bottom: 2.1rem; }
+      .footer { flex-direction: column; gap: .3rem; }
+    }
+    @media (max-width: 280px) {
+      .page { width: calc(100% - 24px); }
+      .profile { display: block; }
+      .portrait { max-width: 108px; margin-bottom: 1rem; }
+      .profile-contact { margin-top: 1rem; }
+      .news-item { grid-template-columns: 1fr; gap: .15rem; }
+      h1 { font-size: 1.8rem; }
+    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+    @media print {
+      .page { width: 100%; }
+      .topbar, .skip-link, .portrait, .footer, .figure-viewer { display: none; }
+      .layout { grid-template-columns: 170px minmax(0, 1fr); gap: 2rem; padding-top: 0; }
+      .profile { position: static; }
+      .section, .publication, .entry { break-inside: avoid; }
+      a { text-decoration: none; color: var(--ink); }
+    }
+  </style>
 </head>
 <body>
-<a class="skip-link" href="#abstract">Skip to content</a>
-<header class="hero" id="top">
-  <div class="container hero-inner">
-    <h1>Not All Error Yields to Scale:<span class="title-subtitle">Where Scaling Stops in Vision-Language Inference</span></h1>
-    <p class="authors"><span>Xinye Zhao</span><span>Yunkai Dang</span><span>Yunchen Wu</span><span>Wenbin Li<sup>†</sup></span></p>
-    <p class="affiliation">School of Intelligence Science and Technology<br><strong>Nanjing University</strong></p>
-    <p class="correspondence"><sup>†</sup> Corresponding author</p>
-    <nav class="resources" aria-label="Paper resources">
-      <a id="paper-link" href="https://arxiv.org/pdf/2610.01640" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5M8 12h8M8 16h6"/></svg><span>Paper</span></a>
-      <a href="#bibtex"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7h5v6H6v4H3v-5c0-3 1-5 2-5zM16 7h5v6h-4v4h-3v-5c0-3 1-5 2-5z"/></svg><span>BibTeX</span></a>
-    </nav>
+  <a class="skip-link" href="#about">Skip to content</a>
+  <div class="page">
+    <header class="topbar">
+      <span class="site-label">XINYE ZHAO</span>
+      <nav class="nav" aria-label="Main navigation">
+        <a href="#about">About</a>
+        <a href="#research">Research</a>
+        <a href="#experience">Experience</a>
+        <a href="#education">Education</a>
+        <a href="#honors">Awards</a>
+      </nav>
+    </header>
+    <div class="layout">
+      <!-- A. 个人信息：照片使用原图；通过 CSS 在头像区域中展示。 -->
+      <aside class="profile" aria-label="Profile information">
+        <div class="portrait">
+          <img src="portrait.jpg?v=20261011-beach" alt="Xinye Zhao" width="1280" height="1707" fetchpriority="high">
+        </div>
+        <div class="profile-info">
+          <div class="profile-name">Xinye Zhao</div>
+          <div class="profile-native" lang="zh-CN">赵歆烨</div>
+        </div>
+        <div class="profile-contact">
+          <div class="profile-links">
+            <a class="contact-link" href="mailto:xinye_zhao@smail.nju.edu.cn" aria-label="Email Xinye Zhao at xinye_zhao@smail.nju.edu.cn" title="xinye_zhao@smail.nju.edu.cn">
+              <svg class="contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="m3 6 9 7 9-7"></path></svg>
+              <span>Email</span>
+            </a>
+            <a class="contact-link" href="https://github.com/JenniferZhao0531" aria-label="Xinye Zhao on GitHub: JenniferZhao0531" title="JenniferZhao0531 on GitHub">
+              <!-- GitHub mark from Primer Octicons; license in THIRD_PARTY_NOTICES.txt. -->
+              <svg class="contact-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M6.766 11.328c-2.063-.25-3.516-1.734-3.516-3.656 0-.781.281-1.625.75-2.188-.203-.515-.172-1.609.063-2.062.625-.078 1.468.25 1.968.703.594-.187 1.219-.281 1.985-.281.765 0 1.39.094 1.953.265.484-.437 1.344-.765 1.969-.687.218.422.25 1.515.046 2.047.5.593.766 1.39.766 2.203 0 1.922-1.453 3.375-3.547 3.64.531.344.89 1.094.89 1.954v1.625c0 .468.391.734.86.547C13.781 14.359 16 11.53 16 8.03 16 3.61 12.406 0 7.984 0 3.563 0 0 3.61 0 8.031a7.88 7.88 0 0 0 5.172 7.422c.422.156.828-.125.828-.547v-1.25c-.219.094-.5.156-.75.156-1.031 0-1.64-.562-2.078-1.609-.172-.422-.36-.672-.719-.719-.187-.015-.25-.093-.25-.187 0-.188.313-.328.625-.328.453 0 .844.281 1.25.86.313.452.64.655 1.031.655s.641-.14 1-.5c.266-.265.47-.5.657-.656"></path></svg>
+              <span>GitHub</span>
+            </a>
+            <a class="contact-link" href="https://scholar.google.com/citations?user=MvMsTVcAAAAJ&amp;hl=en" aria-label="Xinye Zhao on Google Scholar" title="Xinye Zhao on Google Scholar">
+              <svg class="contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m2 9 10-5 10 5-10 5-10-5Z"></path><path d="M6 11v5c3.5 2.7 8.5 2.7 12 0v-5M22 9v7"></path></svg>
+              <span>Google Scholar</span>
+            </a>
+          </div>
+        </div>
+      </aside>
+      <main class="content">
+        <!-- B. 简介：先交代你是谁，再说明你在做什么。 -->
+        <section class="intro" id="about" aria-labelledby="name">
+          <h1 id="name">Xinye Zhao <span class="chinese-name" lang="zh-CN">赵歆烨</span></h1>
+          <p>I am a fourth-year undergraduate student at the <a href="https://is.nju.edu.cn/">School of Intelligence Science and Technology</a>, <a href="https://www.nju.edu.cn/">Nanjing University</a>, majoring in Intelligence Science and Technology. I am fortunate to be advised by <a href="https://liwenbin.cn/">Prof. Wenbin Li</a> and work with <a href="https://yunkaidang.github.io/">Yunkai Dang</a>.</p>
+          <p>My research interests include large language models (LLMs), vision-language models (VLMs), and AI agents. My long-term goal is to understand the principles that govern when large models succeed and when they fail, and to use those principles to build AI systems people can genuinely depend on.</p>
+        </section>
+        <!-- C. 论文列表：标题、作者、引用信息与公开资源链接。 -->
+        <section class="section" id="research" aria-labelledby="research-title">
+          <h2 id="research-title">Research</h2>
+          <article class="publication">
+            <button class="pub-figure" type="button" aria-label="Open figure for Not All Error Yields to Scale" aria-haspopup="dialog" aria-controls="figure-viewer">
+              <img src="research/where-scaling-stops.png?v=20261011-2335" alt="Visual-token and language-backbone trade-offs, and errors that remain unresolved under inference-time scaling." width="2660" height="810" loading="lazy" decoding="async">
+            </button>
+            <div class="pub-copy">
+            <h3 class="pub-title">Not All Error Yields to Scale: Where Scaling Stops in Vision-Language Inference</h3>
+            <p class="authors"><strong>Xinye Zhao</strong>, Yunkai Dang, Yunchen Wu, Wenbin Li</p>
+            <p class="venue">arXiv preprint arXiv:2610.01640, 2026</p>
+            <div class="pub-links"><a href="https://jenniferzhao0531.github.io/where-scaling-stops/">Project</a><a href="https://arxiv.org/pdf/2610.01640">arXiv</a></div>
+            </div>
+            <p class="pub-summary">We investigate the trade-off between language backbone size and visual token count in VLM inference under a fixed compute budget. We propose the Separable Law to model their scaling effects and guide compute allocation. Across two model families, our experiments show that scaling leaves a substantial fraction of questions unresolved within the tested range.</p>
+            <details class="pub-abstract">
+              <summary>Abstract</summary>
+              <p>Vision-language models face a fixed-budget trade-off between visual detail and language-model capacity. We propose the Separable Law to describe how performance changes with backbone size and visual token count. Using measurements from 26 InternVL and QwenVL models, with backbones ranging from 1B to 72B, across four high-resolution benchmarks with images from 224 pixels to 8K, we find that the skills required by a question help predict whether scaling improves its answer. A substantial fraction of questions does not respond to scaling. The two model families benefit similarly from larger backbones, but differ sharply in their gains from additional visual tokens. Combined with a cost law, the Separable Law yields a closed-form compute-allocation rule. For available deployment configurations, it identifies model and image sizes that perform close to the best feasible choice under the same budget, guiding how much visual information to process relative to reasoning capacity.</p>
+            </details>
+          </article>
+          <article class="publication">
+            <button class="pub-figure" type="button" aria-label="Open figure for SkillFusion" aria-haspopup="dialog" aria-controls="figure-viewer">
+              <img src="research/skillfusion.png" alt="Constraint conflicts, priority ambiguity, and context dilution when multiple skills are loaded together." width="2176" height="710" loading="lazy" decoding="async">
+            </button>
+            <div class="pub-copy">
+            <h3 class="pub-title">SkillFusion: Towards Reliable Multi-Skill Composition for LLM Agents</h3>
+            <p class="authors">Enhao Huang, <strong>Xinye Zhao</strong>, Yiming Li, Bingrun Yang, Nanjun Zhou, Chunshu Xia, Hongwei Yao, Zhan Qin</p>
+            <p class="venue">Preprint coming soon.</p>
+            </div>
+            <p class="pub-summary">Jointly loading independently authored skills can introduce conflicting requirements, unclear priorities, and redundant instructions. We propose SkillFusion, an offline compiler that reconciles these interactions through typed, scoped constraints to produce a reusable merged skill. Our method improves success across agent and transfer benchmarks, achieving over 2.5× the success of unresolved multi-skill loading at the largest tested instruction configurations.</p>
+            <details class="pub-abstract">
+              <summary>Abstract</summary>
+              <p>Independently authored skills can impose incompatible requirements, competing preferences, and redundant instructions when jointly loaded by an LLM agent. We propose SkillFusion, an offline compiler that reconciles these interactions into a reusable merged skill. Its central idea is to make composition decisions explicit through typed, scoped constraints linked to their source directives. A type–scope gate selects candidate interactions, while selective fallback revisits pairs potentially missed by structural pruning. A classifier identifies interaction types, and an adversarial verifier re-examines uncertain judgments. The resolver applies conditional routing or explicit priorities to hard conflicts, verified abstraction to soft conflicts, and deduplication to redundant instructions. Source-linked checks guide synthesis and compression, and metadata synthesis supports discovery of the merged skill. The resulting artifact retains associated scripts and resources and can be reused across tasks and executor models. SkillFusion achieves the highest mean Success among evaluated non-oracle methods on all three agent benchmarks and on both transfer benchmarks across three executor models. At the largest tested instruction configurations, it achieves over 2.5× the Success of unresolved multi-skill loading, highlighting the growing value of reconciliation as composition becomes more demanding.</p>
+            </details>
+          </article>
+          <article class="publication">
+            <button class="pub-figure" type="button" aria-label="Open figure for ESTA-Mem" aria-haspopup="dialog" aria-controls="figure-viewer">
+              <img src="research/esta-mem.png" alt="Comparison of direct answering, multi-agent reasoning, and source-linked visual memory with ESTA-Mem." width="2466" height="916" loading="lazy" decoding="async">
+            </button>
+            <div class="pub-copy">
+            <h3 class="pub-title">ESTA-Mem: Compiling Multi-Agent Trajectories into Auditable Memory for High-Resolution Visual Reasoning</h3>
+            <p class="authors">Ziwei Yan, Yunkai Dang, <strong>Xinye Zhao</strong>, Qi Fan, Tianyu Ding, Wenbin Li</p>
+            <p class="venue">Preprint coming soon.</p>
+            </div>
+            <p class="pub-summary">As multi-agent visual reasoning unfolds, shared histories can lose the links between observations, their sources, and current conclusions. We propose ESTA-Mem, which organizes these histories into a typed, auditable task state with source-linked evidence and role-specific views. Our method improves the baseline by 2.6 and 4.2 percentage points on V* and TreeBench, respectively, without stronger models or longer reasoning.</p>
+            <details class="pub-abstract">
+              <summary>Abstract</summary>
+              <p>Cognitive science shows that human visual memory binds observations to their sources for reliable decisions. In recent years, multimodal large language models (MLLMs) have approached human visual reasoning ability, but processing high-resolution images remains challenging. Existing agent methods enhance the visual perception ability of MLLMs, and multi-agent systems further improve complex reasoning by splitting tasks and assigning them to specialized roles. However, as multi-agent interactions increase, the shared history grows longer without clear links between visual findings and reasoning conclusions. Inspired by cognitive science, we propose ESTA-Mem, an Event-Sourced, Typed, and Auditable Memory system that integrates interaction history into an evolving task state. Linked structures explicitly bind candidate answers to corresponding observations and verification records, while a memory agent proposes updates. Each agent receives these relations through a view tailored to its role, avoiding repeated reconstruction from mixed histories. This clarifies the current task state and next steps for each agent, making memory an active driver of multi-agent visual reasoning. We test our method on five high-resolution benchmarks. ESTA-Mem improves the baseline by 2.6 and 4.2 percentage points on V* and TreeBench, respectively, and outperforms the compared memory methods. Results show that memory organization itself matters, improving visual reasoning without stronger models or longer reasoning.</p>
+            </details>
+          </article>
+          <article class="publication">
+            <button class="pub-figure" type="button" aria-label="Open figure for Bio-RadDS" aria-haspopup="dialog" aria-controls="figure-viewer">
+              <img src="research/bio-radds.png" alt="Bio-RadDS training, radial projection, dense-to-sparse transition, and static sparse deployment." width="1490" height="810" loading="lazy" decoding="async">
+            </button>
+            <div class="pub-copy">
+            <h3 class="pub-title">Bio-RadDS: Biologically Inspired Radially Balanced Dense-to-Sparse Convolution for Efficient Large-Kernel Vision Models</h3>
+            <p class="authors">Yunchen Wu, Yunkai Dang, <strong>Xinye Zhao</strong>, Yuekun Yang, Wenbin Li, Feng Miao, Yang Gao, Feng Yan</p>
+            <p class="venue">Preprint coming soon.</p>
+            </div>
+            <p class="pub-summary">Large-kernel convolutions provide broad spatial context, but many connections are redundant and costly. We propose Bio-RadDS, which preserves a dense center while learning sparse peripheral connections through a gradual dense-to-sparse transition. On ConvNeXt-Tiny, our fixed sparse deployment achieves 2.5×–3.5× end-to-end acceleration in FP32 as input resolution increases from 224 to 2048.</p>
+            <details class="pub-abstract">
+              <summary>Abstract</summary>
+              <p>Large-kernel convolutions capture broad spatial context, but their computational cost increases rapidly with kernel area and many spatial connections are essentially redundant. Existing methods either retain dense spatial execution or rely on predefined sparse patterns, limiting their ability to learn efficient spatial connectivity from data. To this end, we present Bio-inspired Radially Balanced Dense-to-Sparse Convolution (Bio-RadDS), a biologically inspired operator that keeps the kernel center dense and learns sparse connections across peripheral radial bands. We combine learnable spatial modulation with a gradual dense-to-sparse transition to obtain compact connectivity while preserving broad spatial coverage. The resulting fixed topology is paired with dedicated sparse execution to enable practical inference acceleration. In the principal operator experiment, Bio-RadDS removes about 60% of the connections in the target kernels and ranks first in 15 of 21 settings across seven image classification datasets. On ConvNeXt-Tiny, the FP32 sparse deployment achieves 2.5×–3.5× end-to-end acceleration as the input size increases from 224 to 2048. These results show that Bio-RadDS learns compact large-kernel connectivity while maintaining strong classification accuracy and enabling efficient deployment at demanding input resolutions.</p>
+            </details>
+          </article>
+        </section>
+        <!-- D. 实习：保留实际职责，将较长的简历描述压缩为网页条目。 -->
+        <section class="section" id="experience" aria-labelledby="experience-title">
+          <h2 id="experience-title">Internship Experience</h2>
+          <div class="entry internship-entry">
+            <div class="company-heading">
+              <img class="company-logo" src="ey-logo.svg" alt="" aria-hidden="true" width="69" height="70">
+              <div class="company-title"><h3>EY (Ernst &amp; Young)</h3><span class="internship-role">AI Agent Development Intern</span></div>
+            </div>
+            <span class="date"><em>2026.04 - 2026.08</em></span>
+          </div>
+          <ul class="experience-points">
+            <li>Translated SAP-related audit workflows into multimodal agent workflows and supporting tools, with output validation and anomaly alerts to address model hallucinations and source-data quality issues.</li>
+            <li>Implemented an integrated audit tool covering task execution, result presentation, and human review.</li>
+          </ul>
+        </section>
+        <!-- E. 教育：只保留就读时间、本科生身份和 GPA。 -->
+        <section class="section" id="education" aria-labelledby="education-title">
+          <h2 id="education-title">Education</h2>
+          <div class="entry">
+            <div><h3>Undergraduate student at Nanjing University</h3><p>GPA: <strong>4.46 / 5.00</strong> (Average Score: <strong>89.2 / 100</strong>)</p></div>
+            <span class="date"><em>2023.09 - 2027.06</em></span>
+          </div>
+        </section>
+        <!-- F. 荣誉与奖项：年份单独一列，保留奖项等级与赛区。 -->
+        <section class="section" id="honors" aria-labelledby="honors-title">
+          <h2 id="honors-title">Honors and Awards</h2>
+          <ul class="honors-list" role="list">
+            <li class="honor"><span class="date"><em>2025</em></span><span>Third Prize, Huawei Software Elite Challenge (Jiangshan Region)</span></li>
+            <li class="honor"><span class="date"><em>2024</em></span><span>Outstanding Student of the Freshman College, Nanjing University (Top 5%)</span></li>
+          </ul>
+        </section>
+      </main>
+    </div>
+    <footer class="footer">
+      <span>© 2026 Xinye Zhao<br>Last updated: October 11, 2026</span>
+    </footer>
   </div>
-</header>
-<main>
-<section class="section section-wash" id="abstract" aria-labelledby="abstract-title">
-<div class="container narrow">
-<h2 id="abstract-title">Abstract</h2>
-      <p>Vision-language models (VLMs) face a fixed-budget trade-off between processing more visual information for fine-grained perception and using a larger language backbone for complex reasoning. Existing studies do not tell us which combination of backbone size and input resolution to deploy, especially in high-resolution deployments. To address this gap, we propose the Separable Law that describes how VLM performance changes with language backbone size and visual token count. We fit the law to measurements from 26 InternVL and QwenVL models, with language backbone sizes from 1B to 72B, on four high-resolution benchmarks with image sizes from 224 pixels to 8K. We find that the questions responding to scaling can be predicted from the skill they require, while a substantial fraction never responds at all. We also find that the two model families gain similarly from a larger backbone, while their gains from more visual tokens differ sharply. Combined with a cost law, the Separable Law gives a closed-form rule for allocating compute between backbone size and visual tokens. When deployment is limited to available configurations, the law identifies model and image sizes that perform close to the best feasible choice under the same budget. We hope our work offers a principled way to decide how much a model should be allowed to see at high resolution, given what it must reason about.</p>
-</div>
-</section>
-
-<section class="section" id="overview" aria-labelledby="overview-title">
-<div class="container">
-<h2 id="overview-title">Overview</h2>
-      <figure id="overview-figure">
-        <button class="figure-zoom" type="button" data-title="Overview: From the Separable Law to the Findings" data-pdf="assets/overview.pdf" aria-label="Enlarge the overview figure">
-          <img src="assets/overview.webp" width="3456" height="792" loading="lazy" alt="Overview of the study: a fixed-budget trade-off between visual tokens and language backbone size leads to the Separable Law, question-level scaling ceilings, architecture-dependent scaling behavior, and compute allocation for deployment.">
-        </button>
-      </figure>
-</div>
-</section>
-
-<section class="section " id="motivation" aria-labelledby="motivation-title">
-<div class="container">
-<h2 id="motivation-title">Motivation</h2>
-      <p>High-resolution visual questions can require both small details and complex reasoning. Processing <strong class="key-emphasis visual">more visual tokens</strong> preserves evidence but consumes compute; a <strong class="key-emphasis capacity">larger language backbone</strong> adds capacity but leaves less budget for the image. This raises an important question, illustrated in <a href="#motivation-figure">Figure 1</a>: <strong class="text-highlight">Given a fixed inference budget, how should compute be allocated between the language backbone and the visual tokens?</strong></p>
-      <figure class="teaser" id="motivation-figure">
-        <button class="figure-zoom" type="button" data-title="Fixed-budget vision-language inference" data-pdf="assets/motivation.pdf" aria-label="Enlarge the research overview figure">
-          <img src="assets/motivation.webp" width="2800" height="841" loading="lazy" alt="Two ways to spend the same inference budget: more visual tokens with a smaller backbone, or fewer tokens with a larger backbone. Some questions benefit from scaling while others remain largely incorrect over the tested range.">
-        </button>
-      </figure>
-      <p>We evaluate InternVL and QwenVL on HR-Bench, MME-RealWorld, TreeBench, and V* Bench while varying input resolution and measuring the visual tokens entering each backbone.</p>
-</div>
-</section>
-
-<section class="section section-wash" id="method" aria-labelledby="method-title">
-<div class="container">
-<h2 id="method-title">The Separable Law</h2>
-      <p>We model downstream error as <strong class="key-emphasis">three additive components</strong>: a fitted error floor, a term that falls with <strong class="key-emphasis capacity">language backbone size</strong>, and a term that falls with <strong class="key-emphasis visual">visual token count</strong>.</p>
-      <div class="equation equation-stacked" role="math" aria-label="L of N, R equals e infinity plus A divided by N to the alpha plus B divided by R to the beta">
-        <span><i>L</i>(<i>N</i>, <i>R</i>) =</span>
-        <span class="floor"><i>e</i><sub>∞</sub></span><span>+</span>
-        <span class="fraction capacity"><span class="numerator"><i>A</i></span><span class="denominator"><i>N</i><sup>α</sup></span></span>
-        <span>+</span>
-        <span class="fraction visual"><span class="numerator"><i>B</i></span><span class="denominator"><i>R</i><sup>β</sup></span></span>
-      </div>
-      <div class="equation-key"><span><b class="floor">e<sub>∞</sub></b> Fitted error floor</span><span><b class="capacity">N</b> Language backbone parameters</span><span><b class="visual">R</b> Visual tokens entering the backbone</span></div>
-      <p>The law captures the observed error surface and offers the <strong class="key-emphasis">best fit–complexity trade-off</strong> among the tested candidate forms.</p>
-      <figure>
-        <button class="figure-zoom" type="button" data-title="Validating the Separable Law" data-pdf="assets/fit-quality.pdf" aria-label="Enlarge the scaling-law validation figure">
-          <img src="assets/fit-quality.webp" width="2800" height="783" loading="lazy" alt="Predicted versus observed error, residual diagnostics, and comparison of separable, multiplicative, coupled, CES, and p-norm candidate scaling laws.">
-        </button>
-        <figcaption>Fit quality and candidate-law comparisons support the separable formulation.</figcaption>
-      </figure>
-</div>
-</section>
-
-<section class="section " id="findings" aria-labelledby="findings-title">
-<div class="container">
-<h2 id="findings-title">Key Findings</h2>
-<article class="finding" id="cognitive-ceiling" aria-labelledby="cognitive-ceiling-title">
-<p class="finding-label">Finding 1</p>
-<h3 id="cognitive-ceiling-title">Scaling Leaves Persistent Errors</h3>
-      <p class="finding-summary"><strong class="text-highlight">Scaling helps most questions but not all.</strong> About a third of them stay wrong at every model size and visual-token count we evaluate, and scaling shifts them in both directions without settling them. Which questions these are depends mainly on the visual skill a question demands, with the worst cases confined to particular pairings of skill and scene.</p>
-      <figure>
-        <button class="figure-zoom" type="button" data-title="Cognitive ceilings and question-level scaling response" data-pdf="assets/cognitive-ceilings.pdf" aria-label="Enlarge the cognitive ceilings figure">
-          <img src="assets/cognitive-ceilings.webp" width="2800" height="917" loading="lazy" alt="Question-level scaling regimes, gains in correct-answer probability across compute quartiles, and observed accuracy by required skill across compute quartiles.">
-        </button>
-        <figcaption>Question-level scaling responses vary across visual domains and required skills.</figcaption>
-      </figure>
-      <p class="finding-detail">Task averages can hide persistent errors on individual questions. <strong class="key-emphasis">Required skill explains more variation</strong> in the fitted floor than visual domain. Text reading and object identification show low fitted floors across most supported domains. The strongest ceiling occurs for <em>Aerial/Satellite × Scene Reasoning</em>.</p>
-</article>
-<article class="finding" id="architecture" aria-labelledby="architecture-title">
-<p class="finding-label">Finding 2</p>
-<h3 id="architecture-title">Visual-Token Scaling Depends on Architecture</h3>
-      <p class="finding-summary">The gains from a larger language backbone and from more visual tokens depend on the architecture. The two families <strong class="text-highlight capacity">agree on capacity</strong> but differ by more than an order of magnitude on visual tokens, because their frontends turn the same pixel budget into <strong class="text-highlight visual">very different token counts</strong>. Which of the two axes pays off faster reverses between them, so an allocation tuned on one architecture need not carry over to another.</p>
-      <figure>
-        <button class="figure-zoom" type="button" data-title="Architecture-dependent visual-token scaling" data-pdf="assets/architecture-divergence.pdf" aria-label="Enlarge the architectural divergence figure">
-          <img src="assets/architecture-divergence.webp" width="2800" height="748" loading="lazy" alt="Discrete tiling versus continuous resizing, contrasting fitted scaling exponents, and task-level capacity and visual-token exponents for InternVL and QwenVL.">
-        </button>
-        <figcaption>Discrete tiling and continuous resizing expose different token ranges and fitted scaling exponents.</figcaption>
-      </figure>
-<div class="pipeline-demo" id="pipeline-demo">
-  <div class="pipeline-shell">
-    <iframe id="pipeline-animation" src="assets/vlm-pipeline.html" title="Interactive comparison of InternVL and QwenVL visual-token pipelines" loading="lazy" sandbox="allow-scripts" referrerpolicy="no-referrer"></iframe>
-  </div>
-</div>
-      <p class="finding-detail">InternVL selects its tile grid mainly by image aspect ratio, so a larger input can leave the tile count unchanged. QwenVL resizes the whole image, exposing a much broader token range. Token count alone can miss changes in <strong class="key-emphasis">preserved image detail</strong>. For InternVL, <em>effective pixels</em> measure the image area retained by the frontend and explain variation that token count misses.</p>
-</article>
-<article class="finding" id="allocation" aria-labelledby="allocation-title">
-<p class="finding-label">Finding 3</p>
-<h3 id="allocation-title">The Law Guides Compute Allocation</h3>
-      <p class="finding-summary">The best way to spend a fixed budget depends on how much error each axis removes per unit of compute. Combined with a cost law, our law directs extra compute toward <strong class="text-highlight capacity">a larger backbone for InternVL</strong> and toward <strong class="text-highlight visual">more visual tokens for QwenVL</strong>. The option our law ranks first performs nearly as well as the best available option, even when it was held out from the fit.</p>
-      <figure>
-        <button class="figure-zoom" type="button" data-title="Compute allocation and held-out deployment decisions" data-pdf="assets/compute-allocation.pdf" aria-label="Enlarge the compute allocation figure">
-          <img src="assets/compute-allocation.webp" width="2800" height="620" loading="lazy" alt="Continuous VPE allocation trajectories, mean and 90th-percentile regret under joint holdout, regret distributions, and benchmark scaling-response diagnostics.">
-        </button>
-        <figcaption>VPE allocation and held-out configuration selection connect the scaling law to deployment decisions.</figcaption>
-      </figure>
-      <p class="finding-detail">The continuous solution describes how backbone size and visual tokens should grow with the language-side compute budget. For a fixed catalogue, <strong class="key-emphasis">direct selection</strong> predicts error for every configuration within budget and chooses the lowest. We test this rule with one backbone size and one input size <strong class="key-emphasis">held out from fitting</strong>. The selected configurations remain close to the best feasible choices.</p>
-</article>
-</div>
-</section>
-
-<section class="section section-wash" id="cases" aria-labelledby="cases-title">
-<div class="container">
-<h2 id="cases-title">Qualitative Examples</h2>
-<p class="section-intro">Selected Qwen3-VL examples show how answers change with visual input size and language backbone capacity.</p>
-<div class="case-tabs" id="case-tabs" role="tablist" aria-label="Question-level scaling examples">
-<button class="case-tab" id="case-tab-1" type="button" role="tab" aria-controls="case-panel-1" aria-selected="true" tabindex="0">More visual detail</button>
-<button class="case-tab" id="case-tab-2" type="button" role="tab" aria-controls="case-panel-2" aria-selected="false" tabindex="-1">Non-monotonic resolution</button>
-<button class="case-tab" id="case-tab-3" type="button" role="tab" aria-controls="case-panel-3" aria-selected="false" tabindex="-1">Larger backbone</button>
-</div>
-<div class="case-panels">
-<div class="case-panel" id="case-panel-1" role="tabpanel" aria-labelledby="case-tab-1" tabindex="0">
-<h3>More visual detail can help</h3>
-<figure>
-        <button class="figure-zoom" type="button" data-title="A remote-sensing question across input sizes" data-pdf="assets/case-resolution-remote-sensing.pdf" aria-label="Enlarge the remote-sensing case study">
-          <img src="assets/case-resolution-remote-sensing.webp" width="2640" height="1000" loading="lazy" alt="A remote-sensing question evaluated with Qwen3-VL 4B at input sizes from 224 to 2048 pixels, becoming correct at 768 pixels and remaining correct at larger inputs.">
-        </button>
-        <figcaption>With the model fixed, more visual detail resolves this remote-sensing question.</figcaption>
-      </figure>
-</div>
-<div class="case-panel" id="case-panel-2" role="tabpanel" aria-labelledby="case-tab-2" tabindex="0">
-<h3>Higher resolution is not always better</h3>
-<figure>
-        <button class="figure-zoom" type="button" data-title="A non-monotonic response to input resolution" data-pdf="assets/case-resolution-nonmonotonic.pdf" aria-label="Enlarge the non-monotonic resolution case study">
-          <img src="assets/case-resolution-nonmonotonic.webp" width="2628" height="1019" loading="lazy" alt="A Qwen3-VL 2B question is correct at 224 and 336 pixels, incorrect from 512 to 1024 pixels, and correct again at 2048 pixels.">
-        </button>
-        <figcaption>Increasing input resolution changes this answer in both directions.</figcaption>
-      </figure>
-</div>
-<div class="case-panel" id="case-panel-3" role="tabpanel" aria-labelledby="case-tab-3" tabindex="0">
-<h3>A larger backbone can make the difference</h3>
-<figure>
-        <button class="figure-zoom" type="button" data-title="Document reading at a fixed input size" data-pdf="assets/case-model-size-document.pdf" aria-label="Enlarge the model-size document case study">
-          <img src="assets/case-model-size-document.webp" width="2407" height="912" loading="lazy" alt="A fax-number question at a fixed input size of 1024 pixels, answered correctly by Qwen3-VL 8B and 32B but incorrectly by 2B and 4B.">
-        </button>
-        <figcaption>At a fixed input size, larger backbones recover the correct answer to this document-reading question.</figcaption>
-      </figure>
-</div>
-</div>
-</div>
-</section>
-
-<section class="section section-wash" id="bibtex" aria-labelledby="bibtex-title">
-<div class="container narrow">
-<h2 id="bibtex-title">BibTeX Citation</h2>
-      <p>If you find this work helpful, please cite:</p>
-      <div class="citation-top"><span>Citation</span><button class="copy-button" id="copy-citation" type="button">Copy BibTeX</button></div>
-      <pre><code id="citation">@article{zhao2026not,
-  title={Not All Error Yields to Scale: Where Scaling Stops in Vision-Language Inference},
-  author={Zhao, Xinye and Dang, Yunkai and Wu, Yunchen and Li, Wenbin},
-  journal={arXiv preprint arXiv:2610.01640},
-  year={2026}
-}</code></pre>
-      <p id="copy-status" role="status" aria-live="polite"></p>
-</div>
-</section>
-</main>
-<dialog id="figure-dialog" aria-labelledby="dialog-title">
-    <div class="dialog-top"><h2 id="dialog-title">Research figure</h2><button id="close-figure" class="close-button" type="button" aria-label="Close enlarged figure">Close</button></div>
-    <div class="dialog-image-wrap"><img id="dialog-image" alt=""></div>
-    <p class="dialog-bottom"><a id="dialog-pdf" href="assets/motivation.pdf" target="_blank" rel="noopener noreferrer">Open original vector PDF</a><span>Press Esc to close</span></p>
+  <dialog id="figure-viewer" class="figure-viewer" aria-labelledby="figure-viewer-title">
+    <div class="figure-viewer-header">
+      <h2 id="figure-viewer-title" class="figure-viewer-title">Research figure</h2>
+      <button class="figure-viewer-close" type="button" aria-label="Close figure" autofocus>Close <span aria-hidden="true">×</span></button>
+    </div>
+    <img class="figure-viewer-image" alt="">
   </dialog>
-<script src="script.js" defer></script>
+  <script>
+    const figureViewer = document.getElementById('figure-viewer');
+    const viewerImage = figureViewer.querySelector('.figure-viewer-image');
+    const viewerTitle = document.getElementById('figure-viewer-title');
+    let activeFigure = null;
+
+    document.querySelectorAll('.pub-figure').forEach((button) => {
+      button.addEventListener('click', () => {
+        const image = button.querySelector('img');
+        activeFigure = button;
+        viewerImage.src = image.src;
+        viewerImage.alt = image.alt;
+        viewerTitle.textContent = button.closest('.publication').querySelector('.pub-title').textContent;
+        figureViewer.showModal();
+        document.body.classList.add('figure-open');
+      });
+    });
+
+    figureViewer.querySelector('.figure-viewer-close').addEventListener('click', () => figureViewer.close());
+    figureViewer.addEventListener('click', (event) => {
+      if (event.target === figureViewer || event.target === viewerImage) figureViewer.close();
+    });
+    figureViewer.addEventListener('close', () => {
+      document.body.classList.remove('figure-open');
+      viewerImage.removeAttribute('src');
+      viewerImage.alt = '';
+      activeFigure?.focus({ preventScroll: true });
+      activeFigure = null;
+    });
+  </script>
 </body>
 </html>
